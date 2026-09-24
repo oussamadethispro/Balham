@@ -936,7 +936,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose, onDataR
                       type="text"
                       value={businessData.whatsapp}
                       onChange={(e) => setBusinessData({ ...businessData, whatsapp: e.target.value })}
-                      placeholder="447700900077"
+                      placeholder="447491275560"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm"
                       required
                     />
@@ -1909,12 +1909,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ onClose, onDataR
                       type="text"
                       value={businessData.whatsapp}
                       onChange={(e) => setBusinessData({ ...businessData, whatsapp: e.target.value })}
-                      placeholder="447700900077"
+                      placeholder="447491275560"
                       className="w-full px-3.5 py-2 rounded-lg border border-slate-300 text-sm font-mono text-xs"
                       required
                     />
                     <p className="text-[11px] text-slate-500 mt-1">
-                      For UK numbers: format as 44 + phone number without leading zero (e.g. 447700900077).
+                      For UK numbers: format as 44 + phone number without leading zero (e.g. 447491275560).
                     </p>
                   </div>
 

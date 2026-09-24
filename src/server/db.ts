@@ -144,10 +144,10 @@ const initialData: DatabaseSchema = {
   business: {
     businessName: 'Balham Key Cutting',
     tagline: 'Fast, Reliable Key Duplication & Spare Keys in Balham',
-    phone: '020 8673 0000',
-    whatsapp: '447700900077',
+    phone: '+44 7491 275560',
+    whatsapp: '447491275560',
     email: 'info@balhamkeycutting.co.uk',
-    address: 'Balham High Road',
+    address: '180 Balham High Road',
     area: 'Balham',
     city: 'London',
     postcode: 'SW12 9BW',
@@ -155,8 +155,8 @@ const initialData: DatabaseSchema = {
     longitude: -0.1528,
     googlePlaceId: '',
     websiteUrl: 'https://balhamkeycutting.co.uk',
-    businessDescription: 'Balham Key Cutting provides fast, professional, and reliable key duplication in Balham, South London. From cylinder front door keys to mortice locks, commercial blanks, and spare tenant sets, our dedicated workshop guarantees accurate, smooth-fitting keys cut while you wait.',
-    directionsHelp: 'Conveniently located on Balham High Road, just a short walk from Balham Tube & National Rail Station. Quick stops welcome.',
+    businessDescription: 'Balham Key Cutting (CoreTech) provides fast, professional, and reliable key duplication in Balham, South London. From cylinder front door keys to mortice locks, commercial blanks, and electronic RFID access fobs, our dedicated workshop guarantees accurate, smooth-fitting duplicates while you wait.',
+    directionsHelp: 'Located at 180 Balham High Road (CoreTech, right next to Costa Coffee), just a 2-minute walk from Balham Tube & National Rail Station.',
     socialLinks: {
       facebook: '',
       instagram: '',
@@ -363,11 +363,18 @@ class Database {
       if (fs.existsSync(DB_FILE)) {
         const raw = fs.readFileSync(DB_FILE, 'utf-8');
         const parsed = JSON.parse(raw);
+        const mergedBusiness = { ...initialData.business, ...(parsed.business || {}) };
+        if (mergedBusiness.phone === '020 8673 0000') {
+          mergedBusiness.phone = initialData.business.phone;
+        }
+        if (mergedBusiness.whatsapp === '447700900077') {
+          mergedBusiness.whatsapp = initialData.business.whatsapp;
+        }
         // Merge with initial data to ensure missing fields exist
         return {
           ...initialData,
           ...parsed,
-          business: { ...initialData.business, ...(parsed.business || {}) },
+          business: mergedBusiness,
           googleSettings: { ...initialData.googleSettings, ...(parsed.googleSettings || {}) },
           seoSettings: { ...initialData.seoSettings, ...(parsed.seoSettings || {}) },
           openingHours: parsed.openingHours || initialData.openingHours,

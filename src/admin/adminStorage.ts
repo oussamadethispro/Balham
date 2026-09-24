@@ -65,10 +65,18 @@ export function getStoredSiteData(): PublicDataResponse {
     const raw = localStorage.getItem(STORAGE_KEY_DATA);
     if (raw) {
       const parsed = JSON.parse(raw);
+      const mergedBusiness = { ...fallbackData.business, ...(parsed.business || {}) };
+      // If previously stored values were old placeholders, upgrade them to the new default
+      if (mergedBusiness.phone === '020 8673 0000') {
+        mergedBusiness.phone = fallbackData.business.phone;
+      }
+      if (mergedBusiness.whatsapp === '447700900077') {
+        mergedBusiness.whatsapp = fallbackData.business.whatsapp;
+      }
       return {
         ...fallbackData,
         ...parsed,
-        business: { ...fallbackData.business, ...(parsed.business || {}) },
+        business: mergedBusiness,
         openingHours: { ...fallbackData.openingHours, ...(parsed.openingHours || {}) },
         seo: { ...fallbackData.seo, ...(parsed.seo || {}) },
         googleReviews: { ...fallbackData.googleReviews, ...(parsed.googleReviews || {}) },

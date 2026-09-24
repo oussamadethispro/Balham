@@ -1,8 +1,8 @@
 import React from 'react';
-import { Navigation, MessageSquare, Phone, CheckCircle2, Star, ShieldCheck, MapPin } from 'lucide-react';
+import { Navigation, MessageSquare, Phone, CheckCircle2, ShieldCheck, MapPin } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { BusinessSettings, GoogleReviewData } from '../types.js';
-import heroImage from '../assets/images/balham_key_cutting_hero_1790184227396.jpg';
+import heroImage from '../assets/images/coretech_storefront_1790249245485.jpg';
 
 interface HeroProps {
   business: BusinessSettings;
@@ -93,29 +93,6 @@ export const Hero: React.FC<HeroProps> = ({ business, googleReviews }) => {
                 Call Now
               </a>
             </motion.div>
-
-            {/* Google Rating Micro Bar */}
-            <motion.div
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="pt-2 flex flex-wrap items-center gap-3 text-xs text-slate-300"
-            >
-              <div className="flex items-center gap-2 bg-slate-800/80 border border-slate-700/80 px-3.5 py-2 rounded-lg">
-                <div className="flex text-[#F5B942]">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-3.5 h-3.5 fill-current" />
-                  ))}
-                </div>
-                <span className="font-bold text-white text-xs">
-                  {googleReviews.rating ? `${googleReviews.rating.toFixed(1)} / 5.0` : '5.0 Google Rating'}
-                </span>
-                <span className="text-slate-500">·</span>
-                <span className="text-slate-300">
-                  {googleReviews.totalReviews ? `${googleReviews.totalReviews} Google Reviews` : 'Verified Balham Business'}
-                </span>
-              </div>
-            </motion.div>
           </motion.div>
 
           {/* Right Column: Hero Visual Asset */}
@@ -128,12 +105,12 @@ export const Hero: React.FC<HeroProps> = ({ business, googleReviews }) => {
             <div className="relative rounded-2xl overflow-hidden border border-slate-700 shadow-2xl bg-slate-900 group">
               <img
                 src={heroImage}
-                alt="Balham Key Cutting precision machine and brass cylinder keys"
-                className="w-full h-80 sm:h-[420px] object-cover transform transition-transform duration-700 group-hover:scale-102"
+                alt="CoreTech storefront at 180 Balham High Road next to Costa Coffee"
+                className="w-full h-80 sm:h-[420px] object-cover object-center transform transition-transform duration-700 group-hover:scale-102"
                 loading="eager"
                 referrerPolicy="no-referrer"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent pointer-events-none" />
             </div>
           </motion.div>
 

@@ -47,9 +47,6 @@ export const Header: React.FC<HeaderProps> = ({ business, openingHours, onOpenCo
               <span className="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">
                 Balham Key Cutting
               </span>
-              <span className="text-[11px] text-slate-500 font-medium tracking-wide block">
-                Independent Workshop · Est. Balham
-              </span>
             </div>
           </a>
 

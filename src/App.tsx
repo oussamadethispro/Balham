@@ -2,7 +2,6 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { Header } from './components/Header.js';
 import { Hero } from './components/Hero.js';
 import { ServicesSection } from './components/ServicesSection.js';
-import { KeyEstimator } from './components/KeyEstimator.js';
 import { WhyChooseUs } from './components/WhyChooseUs.js';
 import { HowItWorks } from './components/HowItWorks.js';
 import { AboutSection } from './components/AboutSection.js';
@@ -112,15 +111,7 @@ export default function App() {
         }}
       />
 
-      {/* 4. INTERACTIVE KEY ESTIMATOR & TURNAROUND GUIDE */}
-      <KeyEstimator
-        onSelectServiceForEnquiry={(svcName) => {
-          setSelectedService(svcName);
-          setQuickEnquiryOpen(true);
-        }}
-      />
-
-      {/* 5. WHY CHOOSE BALHAM KEY CUTTING */}
+      {/* 4. WHY CHOOSE BALHAM KEY CUTTING */}
       <WhyChooseUs />
 
       {/* 6. HOW IT WORKS (3-STEP PROCESS) */}
