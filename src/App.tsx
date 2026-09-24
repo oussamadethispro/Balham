@@ -5,9 +5,7 @@ import { ServicesSection } from './components/ServicesSection.js';
 import { WhyChooseUs } from './components/WhyChooseUs.js';
 import { HowItWorks } from './components/HowItWorks.js';
 import { AboutSection } from './components/AboutSection.js';
-import { GoogleReviewsSection } from './components/GoogleReviewsSection.js';
 import { GoogleMapSection } from './components/GoogleMapSection.js';
-import { OpeningHoursSection } from './components/OpeningHoursSection.js';
 import { FAQSection } from './components/FAQSection.js';
 import { ContactSection } from './components/ContactSection.js';
 import { FinalCTA } from './components/FinalCTA.js';
@@ -37,10 +35,8 @@ export default function App() {
   const [selectedService, setSelectedService] = useState<string | undefined>(undefined);
 
   const fetchPublicData = async () => {
-    // Always refresh from stored site data first
     setData(getStoredSiteData());
 
-    // Skip backend API call if hosted on static platforms like GitHub Pages
     if (typeof window !== 'undefined' && (window.location.hostname.endsWith('github.io') || window.location.protocol === 'file:')) {
       return;
     }
@@ -61,7 +57,6 @@ export default function App() {
   useEffect(() => {
     fetchPublicData();
 
-    // Listen for hash change for #admin shortcut
     const handleHash = () => {
       if (window.location.hash === '#admin') {
         setShowAdmin(true);
@@ -71,22 +66,41 @@ export default function App() {
     return () => window.removeEventListener('hashchange', handleHash);
   }, []);
 
-  const handleOpenContact = (service?: string) => {
-    if (service) {
-      setSelectedService(service);
-      setQuickEnquiryOpen(true);
+  const handleOpenContact = (serviceName?: string) => {
+    setSelectedService(serviceName);
+    const contactElem = document.getElementById('contact');
+    if (contactElem) {
+      contactElem.scrollIntoView({ behavior: 'smooth' });
     } else {
-      const contactEl = document.getElementById('contact');
-      if (contactEl) {
-        contactEl.scrollIntoView({ behavior: 'smooth' });
-      }
+      setQuickEnquiryOpen(true);
     }
   };
 
   const { business, services, openingHours, testimonials, googleReviews } = data;
 
+  if (showAdmin) {
+    return (
+      <Suspense fallback={
+        <div className="min-h-screen bg-slate-900 flex items-center justify-center text-white text-sm font-semibold">
+          Loading Admin Control Center...
+        </div>
+      }>
+        <AdminDashboard
+          onClose={() => {
+            setShowAdmin(false);
+            if (window.location.hash === '#admin') {
+              window.history.pushState(null, '', window.location.pathname);
+            }
+            fetchPublicData();
+          }}
+          onDataRefresh={() => fetchPublicData()}
+        />
+      </Suspense>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-[#111827] flex flex-col selection:bg-[#F5B942] selection:text-[#111827] pb-16 md:pb-0">
+    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans selection:bg-[#F5B942]/30 selection:text-slate-900">
       
       {/* 1. STICKY HEADER */}
       <Header
@@ -99,6 +113,7 @@ export default function App() {
       <Hero
         business={business}
         googleReviews={googleReviews}
+        openingHours={openingHours.schedule}
         onOpenContact={() => handleOpenContact()}
       />
 
@@ -107,57 +122,45 @@ export default function App() {
         services={services.filter((s) => s.active)}
         onSelectService={(svcName) => {
           setSelectedService(svcName);
-          setQuickEnquiryOpen(true);
+          handleOpenContact(svcName);
         }}
       />
 
       {/* 4. WHY CHOOSE BALHAM KEY CUTTING */}
       <WhyChooseUs />
 
-      {/* 6. HOW IT WORKS (3-STEP PROCESS) */}
+      {/* 5. HOW IT WORKS (4-STEP PROCESS) */}
       <HowItWorks business={business} />
 
-      {/* 7. ABOUT BALHAM KEY CUTTING */}
+      {/* 6. ABOUT BALHAM KEY CUTTING & CUSTOMER REVIEWS */}
       <AboutSection
         business={business}
-        onOpenContact={() => handleOpenContact()}
-      />
-
-      {/* 8. GOOGLE REVIEWS & LOCAL TESTIMONIALS */}
-      <GoogleReviewsSection
         googleReviews={googleReviews}
-        testimonials={testimonials.filter((t) => t.active)}
-        business={business}
         onOpenContact={() => handleOpenContact()}
       />
 
-      {/* 9. FIND BALHAM KEY CUTTING (GOOGLE MAP & SHOP DETAILS) */}
+      {/* 7. FIND BALHAM KEY CUTTING (GOOGLE MAP & OPENING HOURS) */}
       <GoogleMapSection
         business={business}
         openingHours={openingHours.schedule}
       />
 
-      {/* 10. OPENING HOURS (WITH UK TIMEZONE LIVE OPEN/CLOSED BADGE) */}
-      <OpeningHoursSection
-        openingHoursData={openingHours}
-      />
-
-      {/* 11. FREQUENTLY ASKED QUESTIONS */}
+      {/* 8. FREQUENTLY ASKED QUESTIONS */}
       <FAQSection
         business={business}
       />
 
-      {/* 12. CONTACT / ENQUIRY SECTION */}
+      {/* 9. CONTACT / ENQUIRY SECTION */}
       <ContactSection
         business={business}
         services={services.filter((s) => s.active)}
         selectedServicePreset={selectedService}
       />
 
-      {/* 13. FINAL HIGH CONVERTING CTA */}
+      {/* 10. FINAL HIGH CONVERTING CTA */}
       <FinalCTA business={business} />
 
-      {/* 14. FOOTER */}
+      {/* 11. FOOTER */}
       <Footer
         business={business}
         onOpenLegal={(type) => setLegalModalType(type)}
@@ -170,47 +173,18 @@ export default function App() {
       {/* MOBILE STICKY ACTION BAR */}
       <MobileStickyBar business={business} />
 
-      {/* QUICK ENQUIRY MODAL */}
+      {/* MODALS */}
       <QuickEnquiryModal
         isOpen={quickEnquiryOpen}
         onClose={() => setQuickEnquiryOpen(false)}
-        presetService={selectedService}
         services={services.filter((s) => s.active)}
+        presetService={selectedService}
       />
 
-      {/* LEGAL POLICIES MODAL */}
       <LegalModal
         type={legalModalType}
         onClose={() => setLegalModalType(null)}
       />
-
-      {/* SECURE ADMIN DASHBOARD OVERLAY */}
-      {showAdmin && (
-        <Suspense
-          fallback={
-            <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center">
-              <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 max-w-sm w-full text-center space-y-4 shadow-2xl">
-                <div className="w-12 h-12 border-3 border-[#F5B942] border-t-transparent rounded-full animate-spin mx-auto" />
-                <div>
-                  <h3 className="text-white font-bold text-base">Loading Admin Portal</h3>
-                  <p className="text-slate-400 text-xs mt-1">Initializing secure workshop management...</p>
-                </div>
-              </div>
-            </div>
-          }
-        >
-          <AdminDashboard
-            onClose={() => {
-              setShowAdmin(false);
-              if (window.location.hash === '#admin') {
-                history.pushState(null, '', window.location.pathname);
-              }
-            }}
-            onDataRefresh={fetchPublicData}
-          />
-        </Suspense>
-      )}
-
     </div>
   );
 }

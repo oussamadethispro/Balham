@@ -146,8 +146,8 @@ export const fallbackData: PublicDataResponse = {
   ],
   googleReviews: {
     isConnected: false,
-    rating: null,
-    totalReviews: null,
+    rating: 5.0,
+    totalReviews: 11,
     reviews: [],
     placeId: '',
   },

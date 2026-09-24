@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ChevronDown, Phone, MessageSquare } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { BusinessSettings } from '../types.js';
 
 interface FAQItem {
@@ -8,30 +7,33 @@ interface FAQItem {
   answer: string;
 }
 
-const faqs: FAQItem[] = [
+const faqsLeft: FAQItem[] = [
   {
-    question: 'Do I need to book an appointment before visiting the shop?',
-    answer: 'No appointment is necessary. We operate a walk-in counter service 7 days a week on Balham High Road. Simply bring your key in and we cut duplicates while you wait.',
+    question: 'How much does key cutting cost?',
+    answer: 'Standard cylinder and latch keys start from £5.50. Mortice deadlock keys start from £9.50. We provide competitive, transparent prices with bulk discounts for multiple copies.',
   },
   {
-    question: 'How long does it take to cut duplicate keys?',
-    answer: 'Most standard cylinder, Yale, and Euro cylinder house keys are cut in 2 to 3 minutes. Traditional mortice deadlocks or specialist safe keys take around 5 to 8 minutes.',
+    question: 'How long does key cutting take?',
+    answer: 'Most standard house and cylinder keys are cut in 2 to 3 minutes while you wait. Mortice, safe, and specialist keys typically take 5 to 8 minutes.',
   },
   {
-    question: 'What happens if my newly cut key does not turn in the lock?',
-    answer: 'We offer the 100% Balham Fit & Function Guarantee. If any duplicate feels tight or does not turn smoothly, bring it back along with the original and we will recalibrate or recut it free of charge.',
+    question: 'Do I need the original key?',
+    answer: 'Yes, for the best and most accurate duplicate, an existing working key is required. If your key is slightly worn or snapped in two, we can usually still decode and copy it.',
+  },
+];
+
+const faqsRight: FAQItem[] = [
+  {
+    question: 'Can you cut car keys and key fobs?',
+    answer: 'Yes! We cut and duplicate electronic apartment RFID building fobs, as well as selected vehicle key blades and transponder duplicates. Contact us or bring your key in.',
   },
   {
-    question: 'Can you cut a key from a snapped or bent original?',
-    answer: 'In most cases, yes. As long as you bring both pieces of the broken key to the workshop, our technicians can measure the cuts and reconstruct the original bitting profile onto a fresh blank.',
+    question: 'Do you cut high security keys?',
+    answer: 'Yes, we carry a wide range of security blanks including dimple keys, restricted profile blanks, and security cylinder keys.',
   },
   {
-    question: 'Do you offer bulk key duplication discounts for landlords or agencies?',
-    answer: 'Yes. We regularly cut volume sets for local Balham letting agents, housing associations, and landlords. Contact us or bring your key batch in for trade pricing and itemised VAT receipts.',
-  },
-  {
-    question: 'What payment methods do you accept at the counter?',
-    answer: 'We accept all major debit and credit cards, Apple Pay, Google Pay, contactless payments, and cash.',
+    question: 'Are walk-ins welcome?',
+    answer: 'Absolutely. No appointment is needed. Our workshop is open 6 days a week on Balham High Road for immediate counter service.',
   },
 ];
 
@@ -40,112 +42,102 @@ interface FAQSectionProps {
 }
 
 export const FAQSection: React.FC<FAQSectionProps> = ({ business }) => {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
-
-  const toggle = (idx: number) => {
-    setOpenIndex(openIndex === idx ? null : idx);
-  };
-
-  const whatsappLink = `https://wa.me/${business.whatsapp}?text=${encodeURIComponent(
-    'Hello Balham Key Cutting, I have a question about key cutting.'
-  )}`;
+  const [openLeft, setOpenLeft] = useState<number | null>(null);
+  const [openRight, setOpenRight] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="py-16 sm:py-20 bg-white border-b border-slate-200 overflow-hidden">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="faq" className="py-14 sm:py-16 bg-[#f8fafc] border-b border-slate-200">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header with Framer Motion */}
-        <motion.div
-          initial={{ opacity: 0, y: 25 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-50px' }}
-          transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="text-center space-y-3 mb-12"
-        >
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-500">
-            Frequently Asked Questions
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-            Key Cutting Questions & Answers
+        {/* Header */}
+        <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-12">
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight uppercase">
+            KEY CUTTING QUESTIONS & ANSWERS
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 max-w-2xl mx-auto">
-            Everything you need to know about our walk-in duplication service, guarantees, and turnaround times in Balham.
-          </p>
-        </motion.div>
+        </div>
 
-        {/* Accordion List with Framer Motion */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-          className="divide-y divide-slate-200 border-y border-slate-200"
-        >
-          {faqs.map((faq, idx) => {
-            const isOpen = openIndex === idx;
-            return (
-              <div key={idx} className="py-4 sm:py-5">
-                <button
-                  type="button"
-                  onClick={() => toggle(idx)}
-                  className="w-full text-left flex items-center justify-between gap-4 group focus:outline-none"
-                  aria-expanded={isOpen}
+        {/* 2-Column Accordion matching reference image */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 items-start">
+          
+          {/* Left Column */}
+          <div className="space-y-3">
+            {faqsLeft.map((faq, idx) => {
+              const isOpen = openLeft === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden transition-colors"
                 >
-                  <span className="text-base sm:text-lg font-bold text-slate-900 group-hover:text-slate-700 transition-colors">
-                    {faq.question}
-                  </span>
-                  <div
-                    className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-transform duration-200 ${
-                      isOpen ? 'bg-slate-900 text-white rotate-180' : 'bg-slate-100 text-slate-600 group-hover:bg-slate-200'
-                    }`}
+                  <button
+                    type="button"
+                    onClick={() => setOpenLeft(isOpen ? null : idx)}
+                    className="w-full text-left p-4 flex items-center justify-between gap-3 text-xs sm:text-sm font-bold text-slate-900 hover:text-slate-700"
                   >
-                    <ChevronDown className="w-4 h-4" />
-                  </div>
-                </button>
-
-                {isOpen && (
-                  <div className="mt-3 pr-6 text-sm text-slate-600 leading-relaxed animate-fade-in">
-                    <p>{faq.answer}</p>
-                  </div>
-                )}
-              </div>
-            );
-          })}
-        </motion.div>
-
-        {/* Still have questions banner with Framer Motion */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-10 p-6 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4"
-        >
-          <div>
-            <h4 className="text-sm font-bold text-slate-900">Have a question about an unusual key?</h4>
-            <p className="text-xs text-slate-600 mt-0.5">Send a quick photo of your key or call our Balham workshop counter.</p>
+                    <span>{faq.question}</span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 ${
+                        isOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            <a
-              href={`tel:${business.phone.replace(/\s+/g, '')}`}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-white border border-slate-300 text-slate-800 text-xs font-bold hover:bg-slate-50 transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#F5B942]" />
-              <span>Call Us</span>
-            </a>
-
-            <a
-              href={whatsappLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-[#F5B942] text-slate-950 text-xs font-bold hover:bg-[#e6ab33] transition-colors"
-            >
-              <MessageSquare className="w-3.5 h-3.5 fill-current" />
-              <span>WhatsApp Us</span>
-            </a>
+          {/* Right Column */}
+          <div className="space-y-3">
+            {faqsRight.map((faq, idx) => {
+              const isOpen = openRight === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-xl border border-slate-200 bg-white shadow-xs overflow-hidden transition-colors"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenRight(isOpen ? null : idx)}
+                    className="w-full text-left p-4 flex items-center justify-between gap-3 text-xs sm:text-sm font-bold text-slate-900 hover:text-slate-700"
+                  >
+                    <span>{faq.question}</span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-slate-500 shrink-0 transition-transform duration-200 ${
+                        isOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 pb-4 pt-1 text-xs text-slate-600 leading-relaxed border-t border-slate-100">
+                      {faq.answer}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
-        </motion.div>
+
+        </div>
+
+        {/* Bottom Help bar */}
+        <div className="mt-8 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-700">
+          <div className="flex items-center gap-1.5 font-medium">
+            <MessageSquare className="w-4 h-4 text-slate-500" />
+            <span>Still have questions? We're happy to help!</span>
+          </div>
+
+          <a
+            href={`tel:${business.phone.replace(/\s+/g, '')}`}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 text-slate-900 font-bold transition-colors shadow-2xs"
+          >
+            <Phone className="w-3.5 h-3.5 text-slate-800" />
+            <span>Call Us: {business.phone}</span>
+          </a>
+        </div>
 
       </div>
     </section>
